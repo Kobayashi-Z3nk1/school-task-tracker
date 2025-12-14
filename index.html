@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>School Task Tracker & Information Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>School Task Tracker</h1>
+        <p>Academic Tasks & Information Portal</p>
+    </header>
+
+    <section>
+        <h2>Announcements</h2>
+        <ul>
+            <li>Performance Tasks submission – Friday</li>
+            <li>Quarterly Exam schedule to be announced</li>
+            <li>Please follow school policies</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Task Tracker</h2>
+        <input type="text" id="taskInput" placeholder="Enter academic task">
+        <button onclick="addTask()">Add Task</button>
+        <ul id="taskList"></ul>
+    </section>
+
+    <footer>
+        © 2025 School Information Portal
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
