@@ -1,4 +1,19 @@
+const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+
 const user = JSON.parse(localStorage.getItem("currentUser"));
+const lastActivity = localStorage.getItem("lastActivity");
+
+// 🚫 Block access if not logged in
+if (!user || !lastActivity) {
+  window.location.href = "index.html";
+}
+
+// ⏳ Auto logout if inactive
+if (Date.now() - lastActivity > SESSION_TIMEOUT) {
+  alert("Session expired. Please log in again.");
+  logout();
+}
+
 document.getElementById("welcome").textContent =
   `Welcome, ${user.name} (${user.role})`;
 
@@ -7,24 +22,35 @@ const studentPanel = document.getElementById("studentPanel");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
+// Role-based UI
 if (user.role === "professor") {
   studentPanel.style.display = "none";
-  renderTasks();
+  renderProfessorTasks();
 } else {
   professorPanel.style.display = "none";
   renderStudentTasks();
 }
 
+// Update activity timestamp
+document.addEventListener("click", updateActivity);
+document.addEventListener("keydown", updateActivity);
+
+function updateActivity() {
+  localStorage.setItem("lastActivity", Date.now());
+}
+
 function addTask() {
-  const task = document.getElementById("taskInput").value;
+  const taskInput = document.getElementById("taskInput");
+  const task = taskInput.value.trim();
   if (!task) return;
 
   tasks.push(task);
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  renderTasks();
+  taskInput.value = "";
+  renderProfessorTasks();
 }
 
-function renderTasks() {
+function renderProfessorTasks() {
   const list = document.getElementById("taskList");
   list.innerHTML = "";
   tasks.forEach(t => {
@@ -46,6 +72,6 @@ function renderStudentTasks() {
 
 function logout() {
   localStorage.removeItem("currentUser");
+  localStorage.removeItem("lastActivity");
   window.location.href = "index.html";
 }
-
