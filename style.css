@@ -48,7 +48,8 @@ li {
 }
 
 .logo {
-  width: 90px;
-  margin-bottom: 15px;
-  opacity: 0.95;
+  width: 80px;              /* controls size */
+  display: block;
+  margin: 0 auto 15px auto; /* centers horizontally */
 }
+
