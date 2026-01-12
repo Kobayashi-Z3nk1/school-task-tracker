@@ -1,45 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>School Task Tracker & Information Portal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Login | School Portal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>School Task Tracker</h1>
-        <p>Academic Tasks & Information Portal</p>
-    </header>
 
-    <section>
-        <h2>Announcements</h2>
-        <ul>
-            <li>Performance Tasks submission – Friday</li>
-            <li>Quarterly Exam schedule to be announced</li>
-            <li>Please follow school policies</li>
-        </ul>
-    </section>
+<div class="box">
+  <h1>School Portal Login</h1>
 
-    <section>
-        <h2>Task Tracker</h2>
-        <input type="text" id="taskInput" placeholder="Enter academic task">
-        <button onclick="addTask()">Add Task</button>
-        <ul id="taskList"></ul>
-    </section>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
 
-    <footer>
-        © 2025 School Information Portal
-    </footer>
+  <button onclick="login()">Login</button>
+
+  <p>No account? <a href="signup.html">Sign up here</a></p>
 </div>
 
-<script src="script.js"></script>
+<script src="auth.js"></script>
 </body>
 </html>
-<img src="images/logo.png" alt="School Logo">
-<header>
-    <img src="images/logo.png" alt="School Logo" class="logo">
-    <h1>School Task Tracker</h1>
-    <p>Academic Tasks & Information Portal</p>
-</header>
