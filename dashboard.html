@@ -1,1 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1 id="welcome"></h1>
+
+  <!-- Professor Section -->
+  <div id="professorPanel" class="panel">
+    <h2>Professor Panel</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <button onclick="addTask()">Add Task</button>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <!-- Student Section -->
+  <div id="studentPanel" class="panel">
+    <h2>Student Tasks</h2>
+    <ul id="studentTasks"></ul>
+  </div>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
 
