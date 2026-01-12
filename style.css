@@ -46,3 +46,8 @@ li {
   padding: 8px;
   border-bottom: 1px solid #333;
 }
+.logo {
+  width: 90px;
+  margin-bottom: 15px;
+  opacity: 0.95;
+}
