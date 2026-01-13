@@ -53,3 +53,61 @@ li {
   margin: 0 auto 15px auto; /* centers horizontally */
 }
 
+/* ===== BACKGROUND IMAGE LAYERING ===== */
+
+body {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Container for background */
+.background-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* LEFT HALF */
+.background-layer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: url("images/background.png") no-repeat left center;
+  background-size: cover;
+  opacity: 0.15;
+}
+
+/* RIGHT HALF */
+.background-layer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: url("images/background.png") no-repeat right center;
+  background-size: cover;
+  opacity: 0.15;
+}
+
+/* FULL CENTER IMAGE OVERLAY */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("images/background.png") no-repeat center center;
+  background-size: cover;
+  opacity: 0.08; /* MAIN opacity control */
+  z-index: -2;
+}
