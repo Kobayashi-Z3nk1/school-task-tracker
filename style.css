@@ -242,3 +242,40 @@ body::before {
   padding: 12px 10px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+/* ===== HERO BACKGROUND (LIKE EXAMPLE) ===== */
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #fff;
+  background: #0b0b0b;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Full-page background image */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("images/background.png") center/cover no-repeat;
+  z-index: -2;
+  transform: scale(1.03); /* slight scale for a smoother look */
+  animation: bgFadeIn 1.5s ease-in-out forwards;
+  opacity: 1;
+}
+
+/* Dark overlay to improve readability */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: -1;
+  animation: bgFadeIn 1.5s ease-in-out forwards;
+}
+
+/* Fade-in animation */
+@keyframes bgFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
