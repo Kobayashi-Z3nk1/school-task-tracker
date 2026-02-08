@@ -125,3 +125,13 @@ onAuthStateChanged(auth, async (user) => {
     alert("Published successfully.");
   });
 });
+document.querySelectorAll(".tabBtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    showSection(btn.dataset.section);
+  });
+});
+
+// Default active on load
+showSection("tasks");
