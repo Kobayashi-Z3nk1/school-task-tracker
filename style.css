@@ -200,3 +200,45 @@ body::before {
   text-align: center;
   margin-bottom: 18px;
 }
+/* ===== TABS CLEANUP ===== */
+.dashboard-tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;            /* wraps nicely if screen is small */
+  margin: 18px 0 22px 0;
+}
+
+.dashboard-tabs .tabBtn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #0b4bb3;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;        /* keeps text tidy */
+}
+
+.dashboard-tabs .tabBtn:hover {
+  filter: brightness(1.05);
+}
+
+.dashboard-tabs .tabBtn.active {
+  background: #00307a;
+}
+.panel {
+  background: rgba(22, 22, 22, 0.8);
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 14px;
+}
+
+.section h2 {
+  margin-bottom: 10px;
+}
+
+.list li {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
