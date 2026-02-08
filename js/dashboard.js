@@ -35,10 +35,19 @@ setInterval(async () => {
 // Tabs
 function showSection(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  const target = document.getElementById(id);
+  if (target) target.classList.add("active");
 }
+
 document.querySelectorAll(".tabBtn").forEach(btn => {
-  btn.addEventListener("click", () => showSection(btn.dataset.section));
+  btn.addEventListener("click", () => {
+    // remove active from all tabs
+    document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("active"));
+    // set active on clicked tab
+    btn.classList.add("active");
+    // show correct section
+    showSection(btn.dataset.section);
+  });
 });
 
 const logoutBtn = document.getElementById("logoutBtn");
@@ -47,30 +56,97 @@ logoutBtn.addEventListener("click", async () => {
   window.location.href = "index.html";
 });
 
-// Render helpers
-function renderList(listEl, items) {
-  listEl.innerHTML = "";
-  items.forEach(i => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${i.title}</strong>${i.subtitle ? ` <span style="color:#b3b3b3">(${i.subtitle})</span>` : ""}<br><span style="color:#cfcfcf">${i.body}</span>`;
-    listEl.appendChild(li);
-  });
+// ===== CATEGORY-SPECIFIC RENDERING =====
+function esc(str) {
+  return (str || "").replace(/[&<>"']/g, (m) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  }[m]));
 }
 
-// Live feeds from Firestore
+// Templates per category
+function templateTask(i) {
+  return `
+    <div class="card">
+      <div class="card-title">${esc(i.title)} <span class="badge">Task</span></div>
+      <div class="card-meta">${esc(i.subtitle || "General")}</div>
+      <div class="card-body">${esc(i.body)}</div>
+    </div>
+  `;
+}
+
+function templateAnnouncement(i) {
+  return `
+    <div class="card">
+      <div class="card-title">${esc(i.title)} <span class="badge">Announcement</span></div>
+      <div class="card-body">${esc(i.body)}</div>
+    </div>
+  `;
+}
+
+function templateProject(i) {
+  return `
+    <div class="card">
+      <div class="card-title">${esc(i.title)} <span class="badge">Project</span></div>
+      <div class="card-body">${esc(i.body)}</div>
+    </div>
+  `;
+}
+
+function templateQuiz(i) {
+  return `
+    <div class="card">
+      <div class="card-title">${esc(i.title)} <span class="badge">Quiz</span></div>
+      <div class="card-body">${esc(i.body)}</div>
+    </div>
+  `;
+}
+
+function templateResource(i) {
+  return `
+    <div class="card">
+      <div class="card-title">${esc(i.title)} <span class="badge">Resource</span></div>
+      <div class="card-body">${esc(i.body)}</div>
+      ${i.link ? `<a class="btn-link" href="${esc(i.link)}" target="_blank">Open Resource</a>` : ""}
+    </div>
+  `;
+}
+
+function renderItems(container, items, type) {
+  if (!container) return;
+
+  if (!items.length) {
+    container.innerHTML = `<div class="card"><div class="card-body">No items yet.</div></div>`;
+    return;
+  }
+
+  const map = {
+    tasks: templateTask,
+    announcements: templateAnnouncement,
+    projects: templateProject,
+    quizzes: templateQuiz,
+    resources: templateResource
+  };
+
+  container.innerHTML = items.map(map[type]).join("");
+}
+
 function bindFeed(type) {
-  const listEl = document.getElementById(`${type}List`);
+  const container = document.getElementById(`${type}List`);
   const q = query(collection(db, type), orderBy("createdAt", "desc"));
-  onSnapshot(q, (snap) => {
+
+  onSnapshot(q, snap => {
     const items = snap.docs.map(d => d.data());
-    renderList(listEl, items);
+    renderItems(container, items, type);
   });
 }
 
+// Bind all feeds
 bindFeed("tasks");
 bindFeed("announcements");
 bindFeed("projects");
 bindFeed("quizzes");
+bindFeed("resources");
 
 // Auth gate + role load
 onAuthStateChanged(auth, async (user) => {
@@ -107,29 +183,31 @@ onAuthStateChanged(auth, async (user) => {
     const title = document.getElementById("postTitle").value.trim();
     const subtitle = document.getElementById("postSubtitle").value.trim();
     const body = document.getElementById("postBody").value.trim();
+    const linkEl = document.getElementById("postLink");
+    const link = linkEl ? linkEl.value.trim() : "";
 
     if (!title || !body) return alert("Title and details are required.");
 
-    await addDoc(collection(db, type), {
-      title,
-      subtitle,
-      body,
-      createdAt: Date.now(),
-      postedBy: profile.email
-    });
+    if (type === "resources") {
+      if (!link || !/^https?:\/\//i.test(link)) {
+        return alert("Resources must include a valid link starting with http:// or https://");
+    }
+  }
+
+      await addDoc(collection(db, type), {
+    title,
+    subtitle,
+    body,
+    link: type === "resources" ? link : "",
+    createdAt: Date.now(),
+    postedBy: profile.email
+  });
 
     document.getElementById("postTitle").value = "";
     document.getElementById("postSubtitle").value = "";
     document.getElementById("postBody").value = "";
 
     alert("Published successfully.");
-  });
-});
-document.querySelectorAll(".tabBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    showSection(btn.dataset.section);
   });
 });
 
