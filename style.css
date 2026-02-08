@@ -178,3 +178,25 @@ body::before {
     transform: translateY(0);
   }
 }
+/* ===== DASHBOARD CARD LAYOUT FIX ===== */
+.container {
+  max-width: 980px;           /* wider so tabs don't crush */
+  margin: 60px auto;
+  padding: 28px;
+  background: rgba(15, 15, 15, 0.88);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* Make logo + title centered nicely */
+.logo {
+  width: 70px;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+#welcome {
+  text-align: center;
+  margin-bottom: 18px;
+}
