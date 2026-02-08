@@ -206,6 +206,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("postTitle").value = "";
     document.getElementById("postSubtitle").value = "";
     document.getElementById("postBody").value = "";
+    if (linkEl) linkEl.value = "";
 
     alert("Published successfully.");
   });
