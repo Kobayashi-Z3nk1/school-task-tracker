@@ -340,3 +340,24 @@ body::after {
 .btn-link:hover {
   background: rgba(255,255,255,0.12);
 }
+/* ===== FORCE NEWS SIDEBAR ON THE RIGHT (OVERRIDE) ===== */
+.container {
+  max-width: 1400px !important;
+  width: min(1400px, 96vw) !important;
+  margin: 40px auto !important;
+}
+
+.layout {
+  display: grid !important;
+  grid-template-columns: 1fr 360px !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+/* Make sure main area can shrink correctly */
+.main { min-width: 0 !important; }
+
+/* Only stack on truly small screens */
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr !important; }
+}
