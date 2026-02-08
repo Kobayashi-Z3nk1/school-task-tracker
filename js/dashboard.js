@@ -17,6 +17,33 @@ import {
 // ⏳ inactivity logout
 const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 let lastActivity = Date.now();
+// ===== Uploadcare attachment =====
+const uploadBtn = document.getElementById("uploadBtn");
+const uploadStatus = document.getElementById("uploadStatus");
+const postAttachmentUrlEl = document.getElementById("postAttachmentUrl");
+
+let uploadedAttachmentUrl = "";
+
+if (uploadBtn) {
+  uploadBtn.addEventListener("click", () => {
+    uploadStatus.textContent = "Opening uploader...";
+    const dialog = uploadcare.openDialog(null, {
+      multiple: false,
+      imagesOnly: false
+    });
+
+    dialog.done((file) => {
+      uploadStatus.textContent = "Uploading...";
+      file.promise().then((info) => {
+        uploadedAttachmentUrl = info.cdnUrl; // ✅ final public URL
+        if (postAttachmentUrlEl) postAttachmentUrlEl.value = uploadedAttachmentUrl;
+        uploadStatus.textContent = "Attached: " + info.name;
+      }).catch(() => {
+        uploadStatus.textContent = "Upload failed. Try again.";
+      });
+    });
+  });
+}
 
 function touch() {
   lastActivity = Date.now();
