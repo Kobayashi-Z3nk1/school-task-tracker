@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | School Portal</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Uploadcare (put your REAL public key here) -->
+  <script>
+    const UPLOADCARE_PUBLIC_KEY = "PASTE_YOUR_PUBLIC_KEY_HERE";
+  </script>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
 </head>
-<script>
-  UPLOADCARE_PUBLIC_KEY = "PASTE_YOUR_PUBLIC_KEY_HERE";
-</script>
-<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
-  <body>
+
+<body>
 
   <div class="container">
     <div class="layout3">
@@ -96,20 +99,20 @@
 
         <div class="panel" id="profCreate" style="display:none;">
           <h2>Professor Tools</h2>
-<!-- Uploadcare upload (Projects / Quizzes / Resources) -->
-<div style="margin-top:10px;">
-  <label style="display:block;margin-bottom:6px;color:#b3b3b3;">
-    Attach file (Projects/Quizzes/Resources)
-  </label>
 
-  <button type="button" id="uploadBtn" class="btn-link">Upload File</button>
-  <div id="uploadStatus" style="margin-top:8px;font-size:12px;color:#b3b3b3;"></div>
+          <!-- Uploadcare upload (Projects / Quizzes / Resources) -->
+          <div style="margin-top:10px;">
+            <label style="display:block;margin-bottom:6px;color:#b3b3b3;">
+              Attach file (Projects/Quizzes/Resources)
+            </label>
 
-  <!-- hidden field that will store uploaded file URL -->
-  <input type="hidden" id="postAttachmentUrl" />
-</div>
+            <button type="button" id="uploadBtn" class="btn-link">Upload File</button>
+            <div id="uploadStatus" style="margin-top:8px;font-size:12px;color:#b3b3b3;"></div>
 
-          <label for="postType">Post Category</label>
+            <input type="hidden" id="postAttachmentUrl" />
+          </div>
+
+          <label for="postType" style="display:block;margin-top:12px;">Post Category</label>
           <select id="postType">
             <option value="tasks">Task</option>
             <option value="announcements">Announcement</option>
@@ -162,11 +165,10 @@
         </div>
       </main>
 
-      <!-- RIGHT NEWS (same feeds, no extra JS needed) -->
+      <!-- RIGHT NEWS -->
       <aside class="news news-right">
         <h3>More News</h3>
 
-        <!-- Mirror the same active panel (simple method: show STEM by default) -->
         <div class="fbWrap active">
           <div class="fb-page"
             data-href="https://www.facebook.com/profile.php?id=100088531427354"
@@ -190,9 +192,10 @@
 
   <!-- Facebook SDK -->
   <script async defer crossorigin="anonymous"
-    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0">
-  </script>
+    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0"></script>
 
+  <!-- Dashboard Logic -->
   <script type="module" src="js/dashboard.js"></script>
+
 </body>
 </html>
