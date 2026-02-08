@@ -14,52 +14,32 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// ⏳ inactivity logout
+/* =========================
+   1) INACTIVITY LOGOUT
+   ========================= */
 const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 let lastActivity = Date.now();
-// ===== Uploadcare attachment =====
-const uploadBtn = document.getElementById("uploadBtn");
-const uploadStatus = document.getElementById("uploadStatus");
-const postAttachmentUrlEl = document.getElementById("postAttachmentUrl");
-
-let uploadedAttachmentUrl = "";
-
-if (uploadBtn) {
-  uploadBtn.addEventListener("click", () => {
-    uploadStatus.textContent = "Opening uploader...";
-    const dialog = uploadcare.openDialog(null, {
-      multiple: false,
-      imagesOnly: false
-    });
-
-    dialog.done((file) => {
-      uploadStatus.textContent = "Uploading...";
-      file.promise().then((info) => {
-        uploadedAttachmentUrl = info.cdnUrl; // ✅ final public URL
-        if (postAttachmentUrlEl) postAttachmentUrlEl.value = uploadedAttachmentUrl;
-        uploadStatus.textContent = "Attached: " + info.name;
-      }).catch(() => {
-        uploadStatus.textContent = "Upload failed. Try again.";
-      });
-    });
-  });
-}
 
 function touch() {
   lastActivity = Date.now();
 }
+
 document.addEventListener("click", touch);
 document.addEventListener("keydown", touch);
 
 setInterval(async () => {
   if (auth.currentUser && Date.now() - lastActivity > SESSION_TIMEOUT) {
     alert("Session expired due to inactivity. Please log in again.");
-    await signOut(auth);
+    try {
+      await signOut(auth);
+    } catch (e) {}
     window.location.href = "index.html";
   }
 }, 15 * 1000);
 
-// Tabs
+/* =========================
+   2) TABS (DASHBOARD)
+   ========================= */
 function showSection(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   const target = document.getElementById(id);
@@ -68,22 +48,71 @@ function showSection(id) {
 
 document.querySelectorAll(".tabBtn").forEach(btn => {
   btn.addEventListener("click", () => {
-    // remove active from all tabs
     document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("active"));
-    // set active on clicked tab
     btn.classList.add("active");
-    // show correct section
     showSection(btn.dataset.section);
   });
 });
 
-const logoutBtn = document.getElementById("logoutBtn");
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.href = "index.html";
-});
+// Default
+showSection("tasks");
 
-// ===== CATEGORY-SPECIFIC RENDERING =====
+/* =========================
+   3) LOGOUT BUTTON
+   ========================= */
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+  });
+}
+
+/* =========================
+   4) UPLOADCARE ATTACHMENT
+   (Projects / Quizzes / Resources)
+   ========================= */
+const uploadBtn = document.getElementById("uploadBtn");
+const uploadStatus = document.getElementById("uploadStatus");
+const postAttachmentUrlEl = document.getElementById("postAttachmentUrl");
+
+// Stores the latest uploaded file URL
+let uploadedAttachmentUrl = "";
+
+function setUploadStatus(msg) {
+  if (uploadStatus) uploadStatus.textContent = msg || "";
+}
+
+if (uploadBtn) {
+  uploadBtn.addEventListener("click", () => {
+    if (typeof uploadcare === "undefined") {
+      alert("Uploadcare is not loaded. Make sure you added the Uploadcare script + public key in dashboard.html.");
+      return;
+    }
+
+    setUploadStatus("Opening uploader...");
+
+    const dialog = uploadcare.openDialog(null, {
+      multiple: false,
+      imagesOnly: false
+    });
+
+    dialog.done((file) => {
+      setUploadStatus("Uploading...");
+      file.promise()
+        .then((info) => {
+          uploadedAttachmentUrl = info.cdnUrl; // ✅ public URL
+          if (postAttachmentUrlEl) postAttachmentUrlEl.value = uploadedAttachmentUrl;
+          setUploadStatus(`Attached: ${info.name}`);
+        })
+        .catch(() => setUploadStatus("Upload failed. Try again."));
+    });
+  });
+}
+
+/* =========================
+   5) CATEGORY-SPECIFIC UI
+   ========================= */
 function esc(str) {
   return (str || "").replace(/[&<>"']/g, (m) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;",
@@ -91,7 +120,15 @@ function esc(str) {
   }[m]));
 }
 
-// Templates per category
+function attachmentButton(i, label = "Open File") {
+  if (!i.attachmentUrl) return "";
+  return `
+    <div class="card-actions">
+      <a class="btn-link" href="${esc(i.attachmentUrl)}" target="_blank" rel="noopener noreferrer">${label}</a>
+    </div>
+  `;
+}
+
 function templateTask(i) {
   return `
     <div class="card">
@@ -106,6 +143,7 @@ function templateAnnouncement(i) {
   return `
     <div class="card">
       <div class="card-title">${esc(i.title)} <span class="badge">Announcement</span></div>
+      <div class="card-meta">${esc(i.subtitle || "Update")}</div>
       <div class="card-body">${esc(i.body)}</div>
     </div>
   `;
@@ -115,7 +153,9 @@ function templateProject(i) {
   return `
     <div class="card">
       <div class="card-title">${esc(i.title)} <span class="badge">Project</span></div>
+      <div class="card-meta">${esc(i.subtitle || "Project")}</div>
       <div class="card-body">${esc(i.body)}</div>
+      ${attachmentButton(i, "Open Project File")}
     </div>
   `;
 }
@@ -124,17 +164,32 @@ function templateQuiz(i) {
   return `
     <div class="card">
       <div class="card-title">${esc(i.title)} <span class="badge">Quiz</span></div>
+      <div class="card-meta">${esc(i.subtitle || "Assessment")}</div>
       <div class="card-body">${esc(i.body)}</div>
+      ${attachmentButton(i, "Open Reviewer / File")}
     </div>
   `;
 }
 
 function templateResource(i) {
+  const resourceLink = i.link
+    ? `<a class="btn-link" href="${esc(i.link)}" target="_blank" rel="noopener noreferrer">Open Resource</a>`
+    : "";
+
+  const fileLink = i.attachmentUrl
+    ? `<a class="btn-link" href="${esc(i.attachmentUrl)}" target="_blank" rel="noopener noreferrer">Open File</a>`
+    : "";
+
+  const actions = (resourceLink || fileLink)
+    ? `<div class="card-actions">${resourceLink}${fileLink}</div>`
+    : "";
+
   return `
     <div class="card">
       <div class="card-title">${esc(i.title)} <span class="badge">Resource</span></div>
+      <div class="card-meta">${esc(i.subtitle || "Material")}</div>
       <div class="card-body">${esc(i.body)}</div>
-      ${i.link ? `<a class="btn-link" href="${esc(i.link)}" target="_blank">Open Resource</a>` : ""}
+      ${actions}
     </div>
   `;
 }
@@ -143,7 +198,7 @@ function renderItems(container, items, type) {
   if (!container) return;
 
   if (!items.length) {
-    container.innerHTML = `<div class="card"><div class="card-body">No items yet.</div></div>`;
+    container.innerHTML = `<div class="card"><div class="card-body" style="opacity:.8;">No items yet.</div></div>`;
     return;
   }
 
@@ -155,30 +210,34 @@ function renderItems(container, items, type) {
     resources: templateResource
   };
 
-  container.innerHTML = items.map(map[type]).join("");
+  const tpl = map[type] || templateAnnouncement;
+  container.innerHTML = items.map(tpl).join("");
 }
 
+/* =========================
+   6) LIVE FEEDS (FIRESTORE)
+   ========================= */
 function bindFeed(type) {
   const container = document.getElementById(`${type}List`);
   const q = query(collection(db, type), orderBy("createdAt", "desc"));
 
-  onSnapshot(q, snap => {
+  onSnapshot(q, (snap) => {
     const items = snap.docs.map(d => d.data());
     renderItems(container, items, type);
   });
 }
 
-// Bind all feeds
 bindFeed("tasks");
 bindFeed("announcements");
 bindFeed("projects");
 bindFeed("quizzes");
 bindFeed("resources");
 
-// Auth gate + role load
+/* =========================
+   7) AUTH GATE + ROLE + PUBLISH
+   ========================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    // 🔒 Lock dashboard if not logged in
     window.location.href = "index.html";
     return;
   }
@@ -192,52 +251,84 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   const profile = profileSnap.data();
-  document.getElementById("welcome").textContent = `Welcome, ${profile.name} (${profile.role})`;
+  const welcome = document.getElementById("welcome");
+  if (welcome) welcome.textContent = `Welcome, ${profile.name} (${profile.role})`;
 
   const roleNote = document.getElementById("roleNote");
-  roleNote.innerHTML = `<p style="color:#b3b3b3;margin:0;">Role-based access is enabled. Professors can publish content. Students can view content.</p>`;
+  if (roleNote) {
+    roleNote.innerHTML = `<p style="color:#b3b3b3;margin:0;">Role-based access is enabled. Professors can publish content. Students can view content.</p>`;
+  }
 
   // Show professor tools
   const profCreate = document.getElementById("profCreate");
-  if (profile.role === "professor") profCreate.style.display = "block";
+  if (profCreate && profile.role === "professor") profCreate.style.display = "block";
 
-  // Professor publish
+  // Publish button
   const postBtn = document.getElementById("postBtn");
+  if (!postBtn) return;
+
   postBtn.addEventListener("click", async () => {
     if (profile.role !== "professor") return alert("Access denied.");
 
-    const type = document.getElementById("postType").value;
-    const title = document.getElementById("postTitle").value.trim();
-    const subtitle = document.getElementById("postSubtitle").value.trim();
-    const body = document.getElementById("postBody").value.trim();
+    const type = document.getElementById("postType")?.value || "tasks";
+    const title = document.getElementById("postTitle")?.value.trim() || "";
+    const subtitle = document.getElementById("postSubtitle")?.value.trim() || "";
+    const body = document.getElementById("postBody")?.value.trim() || "";
+
     const linkEl = document.getElementById("postLink");
     const link = linkEl ? linkEl.value.trim() : "";
 
     if (!title || !body) return alert("Title and details are required.");
 
+    // Resources link validation
     if (type === "resources") {
-      if (!link || !/^https?:\/\//i.test(link)) {
-        return alert("Resources must include a valid link starting with http:// or https://");
+      if (link && !/^https?:\/\//i.test(link)) {
+        return alert("Resource link must start with http:// or https://");
+      }
     }
-  }
 
-      await addDoc(collection(db, type), {
-    title,
-    subtitle,
-    body,
-    link: type === "resources" ? link : "",
-    createdAt: Date.now(),
-    postedBy: profile.email
-  });
+    // Attachment rules for Uploadcare
+    const isAttachTab = (type === "projects" || type === "quizzes" || type === "resources");
+    const attachmentUrl = isAttachTab ? (uploadedAttachmentUrl || "") : "";
 
-    document.getElementById("postTitle").value = "";
-    document.getElementById("postSubtitle").value = "";
-    document.getElementById("postBody").value = "";
+    await addDoc(collection(db, type), {
+      title,
+      subtitle,
+      body,
+      link: type === "resources" ? (link || "") : "",
+      attachmentUrl,
+      createdAt: Date.now(),
+      postedBy: profile.email
+    });
+
+    // Clear form
+    if (document.getElementById("postTitle")) document.getElementById("postTitle").value = "";
+    if (document.getElementById("postSubtitle")) document.getElementById("postSubtitle").value = "";
+    if (document.getElementById("postBody")) document.getElementById("postBody").value = "";
     if (linkEl) linkEl.value = "";
+
+    // Clear upload state
+    uploadedAttachmentUrl = "";
+    if (postAttachmentUrlEl) postAttachmentUrlEl.value = "";
+    setUploadStatus("");
 
     alert("Published successfully.");
   });
 });
 
-// Default active on load
-showSection("tasks");
+/* =========================
+   8) NEWS SIDEBAR TABS (FB)
+   ========================= */
+document.querySelectorAll(".newsTab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".newsTab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    document.querySelectorAll(".fbWrap").forEach(w => w.classList.remove("active"));
+    const panel = document.getElementById(`fb-${btn.dataset.page}`);
+    if (panel) panel.classList.add("active");
+
+    // Re-parse FB plugin after switching
+    if (window.FB && FB.XFBML) FB.XFBML.parse();
+  });
+});
