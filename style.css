@@ -4,10 +4,10 @@ body {
   font-family: Segoe UI, sans-serif;
 }
 
-.box, .container {
-  max-width: 1400px;
-  margin: 40px auto;
-  padding: 22px;
+.box {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
   background: #161616;
   border-radius: 10px;
   text-align: center;
@@ -180,7 +180,7 @@ body::before {
 }
 /* ===== DASHBOARD CARD LAYOUT FIX ===== */
 .container {
-  max-width: 980px;           /* wider so tabs don't crush */
+  max-width: 1400px;           /* wider so tabs don't crush */
   margin: 60px auto;
   padding: 28px;
   background: rgba(15, 15, 15, 0.88);
