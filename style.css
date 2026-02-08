@@ -180,7 +180,7 @@ body::before {
 }
 /* ===== DASHBOARD CARD LAYOUT FIX ===== */
 .container {
-  max-width: 1400px;           /* wider so tabs don't crush */
+  max-width: 980px;           /* wider so tabs don't crush */
   margin: 60px auto;
   padding: 28px;
   background: rgba(15, 15, 15, 0.88);
