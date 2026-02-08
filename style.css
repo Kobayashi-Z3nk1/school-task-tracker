@@ -361,3 +361,56 @@ body::after {
 @media (max-width: 1100px) {
   .layout { grid-template-columns: 1fr !important; }
 }
+/* ===== 3-COLUMN PORTAL LAYOUT ===== */
+.container {
+  max-width: 1600px !important;
+  width: min(1600px, 96vw) !important;
+  margin: 40px auto !important;
+}
+
+.layout3 {
+  display: grid;
+  grid-template-columns: 340px 1fr 340px; /* left news | dashboard | right news */
+  gap: 18px;
+  align-items: start;
+}
+
+/* Center dashboard card look */
+.centerDash {
+  background: rgba(15, 15, 15, 0.88);
+  border-radius: 14px;
+  padding: 28px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* News panels */
+.news {
+  background: rgba(20,20,20,0.72);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px;
+  position: sticky;
+  top: 20px;
+  height: calc(100vh - 40px);
+  overflow: hidden;
+}
+
+.fbWrap {
+  height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+/* Responsive: collapse to 1 column */
+@media (max-width: 1200px) {
+  .layout3 {
+    grid-template-columns: 1fr;
+  }
+  .news {
+    position: static;
+    height: auto;
+  }
+  .fbWrap {
+    height: 560px;
+  }
+}
