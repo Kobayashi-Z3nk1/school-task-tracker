@@ -6,7 +6,11 @@
   <title>Dashboard | School Portal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<script>
+  UPLOADCARE_PUBLIC_KEY = "PASTE_YOUR_PUBLIC_KEY_HERE";
+</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+  <body>
 
   <div class="container">
     <div class="layout3">
@@ -92,6 +96,18 @@
 
         <div class="panel" id="profCreate" style="display:none;">
           <h2>Professor Tools</h2>
+<!-- Uploadcare upload (Projects / Quizzes / Resources) -->
+<div style="margin-top:10px;">
+  <label style="display:block;margin-bottom:6px;color:#b3b3b3;">
+    Attach file (Projects/Quizzes/Resources)
+  </label>
+
+  <button type="button" id="uploadBtn" class="btn-link">Upload File</button>
+  <div id="uploadStatus" style="margin-top:8px;font-size:12px;color:#b3b3b3;"></div>
+
+  <!-- hidden field that will store uploaded file URL -->
+  <input type="hidden" id="postAttachmentUrl" />
+</div>
 
           <label for="postType">Post Category</label>
           <select id="postType">
