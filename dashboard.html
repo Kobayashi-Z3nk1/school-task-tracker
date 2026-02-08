@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | School Portal</title>
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Layer -->
+  <div class="background-layer"></div>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Logo -->
+    <img src="images/logo.png" alt="School Logo" class="logo" />
+
+    <!-- Welcome -->
+    <h1 id="welcome">Dashboard</h1>
+
+    <!-- Tabs -->
+    <div class="dashboard-tabs">
+      <button class="tabBtn active" data-section="tasks">Tasks</button>
+      <button class="tabBtn" data-section="announcements">Announcements</button>
+      <button class="tabBtn" data-section="projects">Projects</button>
+      <button class="tabBtn" data-section="quizzes">Quizzes</button>
+      <button class="tabBtn" data-section="resources">Resources</button>
+    </div>
+
+    <!-- Role Note -->
+    <div class="panel" id="roleNote"></div>
+
+    <!-- Professor Create Panel -->
+    <div class="panel" id="profCreate" style="display:none;">
+      <h2>Professor Tools</h2>
+
+      <label for="postType">Post Category</label>
+      <select id="postType">
+        <option value="tasks">Task</option>
+        <option value="announcements">Announcement</option>
+        <option value="projects">Project</option>
+        <option value="quizzes">Quiz</option>
+        <option value="resources">Resource</option>
+      </select>
+
+      <input type="text" id="postTitle" placeholder="Title" />
+      <input type="text" id="postSubtitle" placeholder="Subject / Class (optional)" />
+      <input type="url" id="postLink" placeholder="Resource link (for Resources only)" />
+
+      <textarea
+        id="postBody"
+        rows="4"
+        placeholder="Details / Instructions"
+        style="width:100%; margin-top:10px; border-radius:6px; padding:10px; border:none;"
+      ></textarea>
+
+      <button id="postBtn">Publish</button>
+    </div>
+
+    <!-- CONTENT SECTIONS -->
+
+    <div class="panel section active" id="tasks">
+      <h2>Tasks</h2>
+      <ul id="tasksList" class="list"></ul>
+    </div>
+
+    <div class="panel section" id="announcements">
+      <h2>Announcements</h2>
+      <ul id="announcementsList" class="list"></ul>
+    </div>
+
+    <div c
