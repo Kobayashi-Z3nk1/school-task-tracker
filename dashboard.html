@@ -4,24 +4,82 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | School Portal</title>
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Main Container -->
   <div class="container">
+    <div class="layout3">
 
-    <div class="layout">
-      <div class="main">
+      <!-- LEFT NEWS -->
+      <aside class="news news-left">
+        <h3>School News</h3>
 
-        <!-- Logo -->
+        <div class="news-tabs">
+          <button class="newsTab active" data-page="page1">STEM</button>
+          <button class="newsTab" data-page="page2">Sports</button>
+          <button class="newsTab" data-page="page3">SSLG</button>
+        </div>
+
+        <div id="fb-root"></div>
+
+        <div class="fbWrap active" id="fb-page1">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/profile.php?id=100088531427354"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false">
+          </div>
+
+          <div class="fbFallback">
+            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=100088531427354" target="_blank" rel="noopener">open STEM page</a>.
+          </div>
+        </div>
+
+        <div class="fbWrap" id="fb-page2">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/profile.php?id=100086140871661"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false">
+          </div>
+
+          <div class="fbFallback">
+            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=100086140871661" target="_blank" rel="noopener">open Sports page</a>.
+          </div>
+        </div>
+
+        <div class="fbWrap" id="fb-page3">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/profile.php?id=61563093364592"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false">
+          </div>
+
+          <div class="fbFallback">
+            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=61563093364592" target="_blank" rel="noopener">open SSLG page</a>.
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER DASHBOARD -->
+      <main class="main centerDash">
         <img src="images/logo.png" alt="School Logo" class="logo" />
-
-        <!-- Welcome -->
         <h1 id="welcome">Dashboard</h1>
 
-        <!-- Tabs -->
         <div class="dashboard-tabs">
           <button class="tabBtn active" data-section="tasks">Tasks</button>
           <button class="tabBtn" data-section="announcements">Announcements</button>
@@ -30,10 +88,8 @@
           <button class="tabBtn" data-section="resources">Resources</button>
         </div>
 
-        <!-- Role Note -->
         <div class="panel" id="roleNote"></div>
 
-        <!-- Professor Create Panel -->
         <div class="panel" id="profCreate" style="display:none;">
           <h2>Professor Tools</h2>
 
@@ -60,8 +116,6 @@
           <button id="postBtn">Publish</button>
         </div>
 
-        <!-- CONTENT SECTIONS -->
-
         <div class="panel section active" id="tasks">
           <h2>Tasks</h2>
           <div id="tasksList" class="cards"></div>
@@ -87,31 +141,22 @@
           <div id="resourcesList" class="cards"></div>
         </div>
 
-        <!-- Logout -->
         <div class="dashboard-actions">
           <button id="logoutBtn" class="logout-btn">Logout</button>
         </div>
+      </main>
 
-      </div> <!-- end .main -->
+      <!-- RIGHT NEWS (same feeds, no extra JS needed) -->
+      <aside class="news news-right">
+        <h3>More News</h3>
 
-      <!-- NEWS SIDEBAR -->
-      <aside class="news">
-        <h3>School News</h3>
-
-        <div class="news-tabs">
-          <button class="newsTab active" data-page="page1">STEM</button>
-          <button class="newsTab" data-page="page2">Sports</button>
-          <button class="newsTab" data-page="page3">SSLG</button>
-        </div>
-
-        <div id="fb-root"></div>
-
-        <div class="fbWrap active" id="fb-page1">
+        <!-- Mirror the same active panel (simple method: show STEM by default) -->
+        <div class="fbWrap active">
           <div class="fb-page"
             data-href="https://www.facebook.com/profile.php?id=100088531427354"
             data-tabs="timeline"
             data-width="320"
-            data-height="560"
+            data-height="900"
             data-small-header="true"
             data-adapt-container-width="true"
             data-hide-cover="false"
@@ -119,55 +164,19 @@
           </div>
 
           <div class="fbFallback">
-            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=100088531427354" target="_blank" rel="noopener">open STEM page</a>.
-          </div>
-        </div>
-
-        <div class="fbWrap" id="fb-page2">
-          <div class="fb-page"
-            data-href="https://www.facebook.com/profile.php?id=100086140871661"
-            data-tabs="timeline"
-            data-width="320"
-            data-height="560"
-            data-small-header="true"
-            data-adapt-container-width="true"
-            data-hide-cover="false"
-            data-show-facepile="false">
-          </div>
-
-          <div class="fbFallback">
-            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=100086140871661" target="_blank" rel="noopener">open Sports page</a>.
-          </div>
-        </div>
-
-        <div class="fbWrap" id="fb-page3">
-          <div class="fb-page"
-            data-href="https://www.facebook.com/profile.php?id=61563093364592"
-            data-tabs="timeline"
-            data-width="320"
-            data-height="560"
-            data-small-header="true"
-            data-adapt-container-width="true"
-            data-hide-cover="false"
-            data-show-facepile="false">
-          </div>
-
-          <div class="fbFallback">
-            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=61563093364592" target="_blank" rel="noopener">open SSLG page</a>.
+            If it doesn’t load, <a href="https://www.facebook.com/profile.php?id=100088531427354" target="_blank" rel="noopener">open page</a>.
           </div>
         </div>
       </aside>
 
-    </div> <!-- end .layout -->
-  </div> <!-- end .container -->
+    </div>
+  </div>
 
   <!-- Facebook SDK -->
   <script async defer crossorigin="anonymous"
     src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0">
   </script>
 
-  <!-- Dashboard Logic -->
   <script type="module" src="js/dashboard.js"></script>
-
 </body>
 </html>
