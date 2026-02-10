@@ -432,3 +432,40 @@ body::after {
   font-size: 12px;
   color: #bdbdbd;
 }
+/* ===== GOOGLE BUTTON (Login/Signup) ===== */
+.google-btn{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.google-btn:hover{
+  background: rgba(255,255,255,0.12);
+}
+
+.gicon{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make the normal login/signup buttons match your blue theme (optional) */
+#loginBtn, #signupBtn {
+  background: #0b4bb3;
+  color: #fff;
+  font-weight: 700;
+}
+
+#loginBtn:hover, #signupBtn:hover {
+  background: #00307a;
+}
