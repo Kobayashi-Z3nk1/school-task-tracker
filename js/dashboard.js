@@ -1,9 +1,6 @@
 // js/dashboard.js
 import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   doc,
   getDoc,
@@ -23,16 +20,13 @@ let lastActivity = Date.now();
 function touch() {
   lastActivity = Date.now();
 }
-
 document.addEventListener("click", touch);
 document.addEventListener("keydown", touch);
 
 setInterval(async () => {
   if (auth.currentUser && Date.now() - lastActivity > SESSION_TIMEOUT) {
     alert("Session expired due to inactivity. Please log in again.");
-    try {
-      await signOut(auth);
-    } catch (e) {}
+    try { await signOut(auth); } catch (e) {}
     window.location.href = "index.html";
   }
 }, 15 * 1000);
@@ -54,7 +48,7 @@ document.querySelectorAll(".tabBtn").forEach(btn => {
   });
 });
 
-// Default
+// Default tab
 showSection("tasks");
 
 /* =========================
@@ -76,7 +70,7 @@ const uploadBtn = document.getElementById("uploadBtn");
 const uploadStatus = document.getElementById("uploadStatus");
 const postAttachmentUrlEl = document.getElementById("postAttachmentUrl");
 
-// Stores the latest uploaded file URL
+// Stores latest uploaded URL
 let uploadedAttachmentUrl = "";
 
 function setUploadStatus(msg) {
@@ -86,7 +80,7 @@ function setUploadStatus(msg) {
 if (uploadBtn) {
   uploadBtn.addEventListener("click", () => {
     if (typeof uploadcare === "undefined") {
-      alert("Uploadcare is not loaded. Make sure you added the Uploadcare script + public key in dashboard.html.");
+      alert("Uploadcare is not loaded. Check your Uploadcare script + PUBLIC KEY in dashboard.html.");
       return;
     }
 
@@ -120,11 +114,16 @@ function esc(str) {
   }[m]));
 }
 
-function attachmentButton(i, label = "Open File") {
+// Download/Open attachment button
+function attachmentButtons(i) {
   if (!i.attachmentUrl) return "";
+
+  // NOTE: "download" may not force download for every file type (browser-dependent),
+  // but it will still allow students to open + download from the new tab.
   return `
     <div class="card-actions">
-      <a class="btn-link" href="${esc(i.attachmentUrl)}" target="_blank" rel="noopener noreferrer">${label}</a>
+      <a class="btn-link" href="${esc(i.attachmentUrl)}" target="_blank" rel="noopener noreferrer">Open File</a>
+      <a class="btn-link" href="${esc(i.attachmentUrl)}" download>Download</a>
     </div>
   `;
 }
@@ -155,7 +154,7 @@ function templateProject(i) {
       <div class="card-title">${esc(i.title)} <span class="badge">Project</span></div>
       <div class="card-meta">${esc(i.subtitle || "Project")}</div>
       <div class="card-body">${esc(i.body)}</div>
-      ${attachmentButton(i, "Open Project File")}
+      ${attachmentButtons(i)}
     </div>
   `;
 }
@@ -166,22 +165,25 @@ function templateQuiz(i) {
       <div class="card-title">${esc(i.title)} <span class="badge">Quiz</span></div>
       <div class="card-meta">${esc(i.subtitle || "Assessment")}</div>
       <div class="card-body">${esc(i.body)}</div>
-      ${attachmentButton(i, "Open Reviewer / File")}
+      ${attachmentButtons(i)}
     </div>
   `;
 }
 
 function templateResource(i) {
-  const resourceLink = i.link
-    ? `<a class="btn-link" href="${esc(i.link)}" target="_blank" rel="noopener noreferrer">Open Resource</a>`
+  const linkBtn = i.link
+    ? `<a class="btn-link" href="${esc(i.link)}" target="_blank" rel="noopener noreferrer">Open Link</a>`
     : "";
 
-  const fileLink = i.attachmentUrl
-    ? `<a class="btn-link" href="${esc(i.attachmentUrl)}" target="_blank" rel="noopener noreferrer">Open File</a>`
+  const fileBtns = i.attachmentUrl
+    ? `
+      <a class="btn-link" href="${esc(i.attachmentUrl)}" target="_blank" rel="noopener noreferrer">Open File</a>
+      <a class="btn-link" href="${esc(i.attachmentUrl)}" download>Download</a>
+    `
     : "";
 
-  const actions = (resourceLink || fileLink)
-    ? `<div class="card-actions">${resourceLink}${fileLink}</div>`
+  const actions = (linkBtn || fileBtns)
+    ? `<div class="card-actions">${linkBtn}${fileBtns}</div>`
     : "";
 
   return `
@@ -251,6 +253,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   const profile = profileSnap.data();
+
   const welcome = document.getElementById("welcome");
   if (welcome) welcome.textContent = `Welcome, ${profile.name} (${profile.role})`;
 
@@ -280,31 +283,40 @@ onAuthStateChanged(auth, async (user) => {
 
     if (!title || !body) return alert("Title and details are required.");
 
-    // Resources link validation
-    if (type === "resources") {
-      if (link && !/^https?:\/\//i.test(link)) {
-        return alert("Resource link must start with http:// or https://");
-      }
+    // Link validation (only when provided)
+    if (type === "resources" && link && !/^https?:\/\//i.test(link)) {
+      return alert("Resource link must start with http:// or https://");
     }
 
-    // Attachment rules for Uploadcare
-    const isAttachTab = (type === "projects" || type === "quizzes" || type === "resources");
-    const attachmentUrl = isAttachTab ? (uploadedAttachmentUrl || "") : "";
+    const allowAttachment = ["projects", "quizzes", "resources"].includes(type);
+
+    // ✅ Use whichever has the URL (variable OR hidden input)
+    const attachmentUrl = allowAttachment
+      ? (uploadedAttachmentUrl || (postAttachmentUrlEl ? postAttachmentUrlEl.value.trim() : ""))
+      : "";
+
+    // Resources must have either link OR attachment
+    if (type === "resources" && !link && !attachmentUrl) {
+      return alert("Resources must include either a link OR an uploaded file.");
+    }
 
     await addDoc(collection(db, type), {
       title,
       subtitle,
       body,
       link: type === "resources" ? (link || "") : "",
-      attachmentUrl,
+      attachmentUrl: attachmentUrl || "",
       createdAt: Date.now(),
       postedBy: profile.email
     });
 
     // Clear form
-    if (document.getElementById("postTitle")) document.getElementById("postTitle").value = "";
-    if (document.getElementById("postSubtitle")) document.getElementById("postSubtitle").value = "";
-    if (document.getElementById("postBody")) document.getElementById("postBody").value = "";
+    const t = document.getElementById("postTitle");
+    const s = document.getElementById("postSubtitle");
+    const b = document.getElementById("postBody");
+    if (t) t.value = "";
+    if (s) s.value = "";
+    if (b) b.value = "";
     if (linkEl) linkEl.value = "";
 
     // Clear upload state
@@ -317,18 +329,43 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 /* =========================
-   8) NEWS SIDEBAR TABS (FB)
+   8) NEWS SIDEBAR TABS (SYNC LEFT + RIGHT)
+   Requires:
+   LEFT:  fb-page1, fb-page2, fb-page3
+   RIGHT: fbR-page1, fbR-page2, fbR-page3
    ========================= */
-document.querySelectorAll(".newsTab").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".newsTab").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    document.querySelectorAll(".fbWrap").forEach(w => w.classList.remove("active"));
-    const panel = document.getElementById(`fb-${btn.dataset.page}`);
-    if (panel) panel.classList.add("active");
-
-    // Re-parse FB plugin after switching
-    if (window.FB && FB.XFBML) FB.XFBML.parse();
+function setNews(pageKey) {
+  // Buttons (left + right)
+  document.querySelectorAll(".news-left .newsTab").forEach(b => {
+    b.classList.toggle("active", b.dataset.page === pageKey);
   });
+  document.querySelectorAll(".news-right .newsTab").forEach(b => {
+    b.classList.toggle("active", b.dataset.page === pageKey);
+  });
+
+  // Panels (left)
+  document.querySelectorAll(".news-left .fbWrap").forEach(w => w.classList.remove("active"));
+  const leftPanel = document.getElementById(`fb-${pageKey}`);
+  if (leftPanel) leftPanel.classList.add("active");
+
+  // Panels (right)
+  document.querySelectorAll(".news-right .fbWrap").forEach(w => w.classList.remove("active"));
+  const rightPanel = document.getElementById(`fbR-${pageKey}`);
+  if (rightPanel) rightPanel.classList.add("active");
+
+  // Re-render FB plugin after switching
+  if (window.FB && window.FB.XFBML) {
+    window.FB.XFBML.parse(document.querySelector(".news-left"));
+    window.FB.XFBML.parse(document.querySelector(".news-right"));
+  }
+}
+
+// Click on any newsTab (either column)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".newsTab");
+  if (!btn) return;
+  setNews(btn.dataset.page);
 });
+
+// Default: STEM
+setNews("page1");
