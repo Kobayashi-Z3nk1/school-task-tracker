@@ -1,23 +1,59 @@
+/* =========================
+   GLOBAL
+========================= */
 body {
-  background: #0d0d0d;
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  background: #0b0b0b;
   color: #fff;
-  font-family: Segoe UI, sans-serif;
+  position: relative;
+  overflow-x: hidden;
 }
 
+/* Background image */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("images/background.png") center/cover no-repeat;
+  z-index: -2;
+  opacity: 1;
+}
+
+/* Dark overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: -1;
+}
+
+/* =========================
+   LOGIN / SIGNUP BOX
+========================= */
 .box {
   max-width: 400px;
   margin: 80px auto;
   padding: 30px;
   background: #161616;
-  border-radius: 10px;
+  border-radius: 14px;
   text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.logo {
+  width: 80px;
+  display: block;
+  margin: 0 auto 15px auto;
 }
 
 input, select {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
 }
 
@@ -25,208 +61,126 @@ button {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
-  background: white;
-  color: black;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
 }
 
-.panel {
-  margin-top: 30px;
-  text-align: left;
+/* Primary buttons */
+#loginBtn, #signupBtn {
+  background: #0b4bb3;
+  color: #fff;
+  font-weight: 700;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  padding: 8px;
-  border-bottom: 1px solid #333;
-}
-
-.logo {
-  width: 80px;              /* controls size */
-  display: block;
-  margin: 0 auto 15px auto; /* centers horizontally */
-}
-
-/* ===== BACKGROUND IMAGE LAYERING ===== */
-
-body {
-  position: relative;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Container for background */
-.background-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* LEFT HALF */
-.background-layer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
-  background: url("images/background.png") no-repeat left center;
-  background-size: cover;
-  opacity: 0.15;
-}
-
-/* RIGHT HALF */
-.background-layer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  background: url("images/background.png") no-repeat right center;
-  background-size: cover;
-  opacity: 0.15;
-}
-
-/* FULL CENTER IMAGE OVERLAY */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url("images/background.png") no-repeat center center;
-  background-size: cover;
-  opacity: 0.08; /* MAIN opacity control */
-  z-index: -2;
-}
-
-/* ===== BACKGROUND FADE-IN ANIMATION ===== */
-
-@keyframes bgFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.background-layer,
-body::before {
-  animation: bgFadeIn 1.5s ease-in-out forwards;
-}
-
-/* ===== DASHBOARD ===== */
-
-.dashboard {
-  max-width: 900px;
-  margin: 50px auto;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 25px;
-  border-radius: 10px;
-}
-
-.dashboard-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.dashboard-tabs button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  background: #004aad;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.dashboard-tabs button:hover {
+#loginBtn:hover, #signupBtn:hover {
   background: #00307a;
 }
 
-.section {
-  display: none;
-  animation: fadeSection 0.4s ease-in-out;
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  opacity: 0.85;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.18);
+}
+.divider span {
+  font-size: 12px;
+  color: #bdbdbd;
 }
 
-.section.active {
-  display: block;
+/* =========================
+   GOOGLE BUTTON
+========================= */
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-weight: 700;
 }
 
-@keyframes fadeSection {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.google-btn:hover {
+  background: rgba(255,255,255,0.12);
 }
-/* ===== DASHBOARD CARD LAYOUT FIX ===== */
+
+.gicon {
+  display: inline-flex;
+}
+
+/* =========================
+   3 COLUMN DASHBOARD
+========================= */
 .container {
-  max-width: 980px;           /* wider so tabs don't crush */
-  margin: 60px auto;
-  padding: 28px;
+  max-width: 1600px;
+  width: 96vw;
+  margin: 40px auto;
+}
+
+.layout3 {
+  display: grid;
+  grid-template-columns: 340px 1fr 340px;
+  gap: 18px;
+  align-items: start;
+}
+
+/* =========================
+   CENTER DASHBOARD CARD
+========================= */
+.centerDash {
   background: rgba(15, 15, 15, 0.88);
   border-radius: 14px;
+  padding: 28px;
   backdrop-filter: blur(6px);
   box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
 
-/* Make logo + title centered nicely */
-.logo {
-  width: 70px;
-  display: block;
-  margin: 0 auto 10px auto;
-}
-
 #welcome {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
-/* ===== TABS CLEANUP ===== */
+
+/* Tabs */
 .dashboard-tabs {
   display: flex;
   gap: 10px;
   justify-content: center;
-  flex-wrap: wrap;            /* wraps nicely if screen is small */
-  margin: 18px 0 22px 0;
+  flex-wrap: wrap;
+  margin: 20px 0;
 }
 
-.dashboard-tabs .tabBtn {
+.tabBtn {
   padding: 10px 14px;
-  border: none;
   border-radius: 8px;
+  border: none;
   background: #0b4bb3;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;        /* keeps text tidy */
 }
 
-.dashboard-tabs .tabBtn:hover {
+.tabBtn.active {
+  background: #00307a;
+}
+
+.tabBtn:hover {
   filter: brightness(1.05);
 }
 
-.dashboard-tabs .tabBtn.active {
-  background: #00307a;
-}
+/* Panels */
 .panel {
   background: rgba(22, 22, 22, 0.8);
   border-radius: 12px;
@@ -234,52 +188,18 @@ body::before {
   margin-top: 14px;
 }
 
-.section h2 {
-  margin-bottom: 10px;
+/* Sections */
+.section {
+  display: none;
 }
 
-.list li {
-  padding: 12px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-/* ===== HERO BACKGROUND (LIKE EXAMPLE) ===== */
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: #fff;
-  background: #0b0b0b;
-  position: relative;
-  overflow-x: hidden;
+.section.active {
+  display: block;
 }
 
-/* Full-page background image */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("images/background.png") center/cover no-repeat;
-  z-index: -2;
-  transform: scale(1.03); /* slight scale for a smoother look */
-  animation: bgFadeIn 1.5s ease-in-out forwards;
-  opacity: 1;
-}
-
-/* Dark overlay to improve readability */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  z-index: -1;
-  animation: bgFadeIn 1.5s ease-in-out forwards;
-}
-
-/* Fade-in animation */
-@keyframes bgFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-/* ===== CARD GRID UI ===== */
+/* =========================
+   CARD GRID
+========================= */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -311,7 +231,6 @@ body::after {
   line-height: 1.4;
 }
 
-/* Small UI bits */
 .badge {
   display: inline-block;
   padding: 4px 8px;
@@ -337,54 +256,14 @@ body::after {
   text-decoration: none;
   font-weight: 600;
 }
+
 .btn-link:hover {
   background: rgba(255,255,255,0.12);
 }
-/* ===== FORCE NEWS SIDEBAR ON THE RIGHT (OVERRIDE) ===== */
-.container {
-  max-width: 1400px !important;
-  width: min(1400px, 96vw) !important;
-  margin: 40px auto !important;
-}
 
-.layout {
-  display: grid !important;
-  grid-template-columns: 1fr 360px !important;
-  gap: 18px !important;
-  align-items: start !important;
-}
-
-/* Make sure main area can shrink correctly */
-.main { min-width: 0 !important; }
-
-/* Only stack on truly small screens */
-@media (max-width: 1100px) {
-  .layout { grid-template-columns: 1fr !important; }
-}
-/* ===== 3-COLUMN PORTAL LAYOUT ===== */
-.container {
-  max-width: 1600px !important;
-  width: min(1600px, 96vw) !important;
-  margin: 40px auto !important;
-}
-
-.layout3 {
-  display: grid;
-  grid-template-columns: 340px 1fr 340px; /* left news | dashboard | right news */
-  gap: 18px;
-  align-items: start;
-}
-
-/* Center dashboard card look */
-.centerDash {
-  background: rgba(15, 15, 15, 0.88);
-  border-radius: 14px;
-  padding: 28px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
-
-/* News panels */
+/* =========================
+   NEWS SIDEBARS
+========================= */
 .news {
   background: rgba(20,20,20,0.72);
   border: 1px solid rgba(255,255,255,0.08);
@@ -397,77 +276,29 @@ body::after {
 }
 
 .fbWrap {
+  display: none;
   height: calc(100vh - 160px);
   overflow: auto;
 }
 
-/* Responsive: collapse to 1 column */
+.fbWrap.active {
+  display: block;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 1200px) {
   .layout3 {
     grid-template-columns: 1fr;
   }
+
   .news {
     position: static;
     height: auto;
   }
+
   .fbWrap {
     height: 560px;
   }
 }
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 12px 0;
-  opacity: 0.85;
-}
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(255,255,255,0.18);
-}
-.divider span {
-  font-size: 12px;
-  color: #bdbdbd;
-}
-/* ===== GOOGLE BUTTON (Login/Signup) ===== */
-.google-btn{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.google-btn:hover{
-  background: rgba(255,255,255,0.12);
-}
-
-.gicon{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Make the normal login/signup buttons match your blue theme (optional) */
-#loginBtn, #signupBtn {
-  background: #0b4bb3;
-  color: #fff;
-  font-weight: 700;
-}
-
-#loginBtn:hover, #signupBtn:hover {
-  background: #00307a;
-}
-.fbWrap { display: none; }
-.fbWrap.active { display: block; }
