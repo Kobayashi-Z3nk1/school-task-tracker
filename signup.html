@@ -27,18 +27,18 @@
 
     <div class="divider"><span>or</span></div>
 
-    <input type="text" id="name" placeholder="Full Name" />
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <form id="signupForm">
+  <input type="text" id="name" placeholder="Full Name" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
 
-    <select id="role">
-      <option value="student">Student</option>
-      <option value="professor">Professor</option>
-    </select>
+  <select id="role">
+    <option value="student">Student</option>
+    <option value="professor">Professor</option>
+  </select>
 
-    <button id="signupBtn">Sign Up</button>
-    <p><a href="index.html">Back to Login</a></p>
-  </div>
+  <button type="submit">Sign Up</button>
+</form>
 
   <script type="module" src="js/auth.js"></script>
 </body>
