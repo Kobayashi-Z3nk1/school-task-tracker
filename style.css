@@ -469,3 +469,5 @@ body::after {
 #loginBtn:hover, #signupBtn:hover {
   background: #00307a;
 }
+.fbWrap { display: none; }
+.fbWrap.active { display: block; }
