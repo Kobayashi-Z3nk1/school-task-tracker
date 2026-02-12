@@ -14,7 +14,6 @@
 </head>
 
 <body>
-
   <div class="container">
     <div class="layout3">
 
@@ -23,16 +22,16 @@
         <h3>School News</h3>
 
         <div class="news-tabs">
-  <button class="newsTab active" data-page="page1">STEM</button>
-  <button class="newsTab" data-page="page2">Sports</button>
-  <button class="newsTab" data-page="page3">SSLG</button>
-  <button class="newsTab" data-page="page4">DepEd Tayo</button>
-</div>
-
+          <button class="newsTab active" data-page="page1">STEM</button>
+          <button class="newsTab" data-page="page2">Sports</button>
+          <button class="newsTab" data-page="page3">SSLG</button>
+          <button class="newsTab" data-page="page4">DepEd Tayo</button>
+        </div>
 
         <div id="fb-root"></div>
 
-        <div class="fbWrap active" id="fb-page1">
+        <!-- LEFT: STEM -->
+        <div class="fbWrap active" data-page="page1" id="fbL-page1">
           <div class="fb-page"
             data-href="https://www.facebook.com/profile.php?id=100088531427354"
             data-tabs="timeline"
@@ -45,11 +44,12 @@
 
           <div class="fbFallback">
             If it doesn’t load,
-            <a href="https://www.facebook.com/profile.php?id=100088531427354" target="_blank">open STEM page</a>.
+            <a href="https://www.facebook.com/profile.php?id=100088531427354" target="_blank" rel="noopener">open STEM page</a>.
           </div>
         </div>
 
-        <div class="fbWrap" id="fb-page2">
+        <!-- LEFT: Sports -->
+        <div class="fbWrap" data-page="page2" id="fbL-page2">
           <div class="fb-page"
             data-href="https://www.facebook.com/profile.php?id=100086140871661"
             data-tabs="timeline"
@@ -62,11 +62,12 @@
 
           <div class="fbFallback">
             If it doesn’t load,
-            <a href="https://www.facebook.com/profile.php?id=100086140871661" target="_blank">open Sports page</a>.
+            <a href="https://www.facebook.com/profile.php?id=100086140871661" target="_blank" rel="noopener">open Sports page</a>.
           </div>
         </div>
 
-        <div class="fbWrap" id="fb-page3">
+        <!-- LEFT: SSLG -->
+        <div class="fbWrap" data-page="page3" id="fbL-page3">
           <div class="fb-page"
             data-href="https://www.facebook.com/profile.php?id=61563093364592"
             data-tabs="timeline"
@@ -79,26 +80,27 @@
 
           <div class="fbFallback">
             If it doesn’t load,
-            <a href="https://www.facebook.com/profile.php?id=61563093364592" target="_blank">open SSLG page</a>.
+            <a href="https://www.facebook.com/profile.php?id=61563093364592" target="_blank" rel="noopener">open SSLG page</a>.
           </div>
         </div>
 
-        <div class="fbWrap" id="fb-page4">
-  <div class="fb-page"
-    data-href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS"
-    data-tabs="timeline"
-    data-width="320"
-    data-height="900"
-    data-small-header="true"
-    data-adapt-container-width="true"
-    data-hide-cover="false"
-    data-show-facepile="false"></div>
+        <!-- LEFT: DepEd Tayo -->
+        <div class="fbWrap" data-page="page4" id="fbL-page4">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false"></div>
 
-  <div class="fbFallback">
-    If it doesn’t load,
-    <a href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS" target="_blank">open DepEd Tayo page</a>.
-  </div>
-</div>
+          <div class="fbFallback">
+            If it doesn’t load,
+            <a href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS" target="_blank" rel="noopener">open DepEd Tayo page</a>.
+          </div>
+        </div>
       </aside>
 
       <!-- CENTER DASHBOARD -->
@@ -150,79 +152,81 @@
       </main>
 
       <!-- RIGHT NEWS -->
-      <!-- RIGHT NEWS -->
-<aside class="news news-right">
-  <h3>More News</h3>
+      <aside class="news news-right">
+        <h3>More News</h3>
 
-  <!-- Optional: buttons on the right too (will stay synced) -->
-  <div class="news-tabs">
-  <button class="newsTab active" data-page="page1">STEM</button>
-  <button class="newsTab" data-page="page2">Sports</button>
-  <button class="newsTab" data-page="page3">SSLG</button>
-  <button class="newsTab" data-page="page4">DepEd Tayo</button>
-</div>
+        <div class="news-tabs">
+          <button class="newsTab active" data-page="page1">STEM</button>
+          <button class="newsTab" data-page="page2">Sports</button>
+          <button class="newsTab" data-page="page3">SSLG</button>
+          <button class="newsTab" data-page="page4">DepEd Tayo</button>
+        </div>
 
-  <div class="fbWrap active" id="fbR-page1">
-    <div class="fb-page"
-      data-href="https://www.facebook.com/profile.php?id=100088531427354"
-      data-tabs="timeline"
-      data-width="320"
-      data-height="900"
-      data-small-header="true"
-      data-adapt-container-width="true"
-      data-hide-cover="false"
-      data-show-facepile="false"></div>
-  </div>
+        <!-- RIGHT: STEM -->
+        <div class="fbWrap active" data-page="page1" id="fbR-page1">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/profile.php?id=100088531427354"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false"></div>
+        </div>
 
-  <div class="fbWrap" id="fbR-page2">
-    <div class="fb-page"
-      data-href="https://www.facebook.com/profile.php?id=100086140871661"
-      data-tabs="timeline"
-      data-width="320"
-      data-height="900"
-      data-small-header="true"
-      data-adapt-container-width="true"
-      data-hide-cover="false"
-      data-show-facepile="false"></div>
-  </div>
+        <!-- RIGHT: Sports -->
+        <div class="fbWrap" data-page="page2" id="fbR-page2">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/profile.php?id=100086140871661"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false"></div>
+        </div>
 
-  <div class="fbWrap" id="fbR-page3">
-    <div class="fb-page"
-      data-href="https://www.facebook.com/profile.php?id=61563093364592"
-      data-tabs="timeline"
-      data-width="320"
-      data-height="900"
-      data-small-header="true"
-      data-adapt-container-width="true"
-      data-hide-cover="false"
-      data-show-facepile="false"></div>
-  </div>
+        <!-- RIGHT: SSLG -->
+        <div class="fbWrap" data-page="page3" id="fbR-page3">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/profile.php?id=61563093364592"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false"></div>
+        </div>
 
-  <div class="fbWrap" id="fb-page4">
-  <div class="fb-page"
-    data-href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS"
-    data-tabs="timeline"
-    data-width="320"
-    data-height="900"
-    data-small-header="true"
-    data-adapt-container-width="true"
-    data-hide-cover="false"
-    data-show-facepile="false"></div>
+        <!-- RIGHT: DepEd Tayo -->
+        <div class="fbWrap" data-page="page4" id="fbR-page4">
+          <div class="fb-page"
+            data-href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS"
+            data-tabs="timeline"
+            data-width="320"
+            data-height="900"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="false"></div>
 
-  <div class="fbFallback">
-    If it doesn’t load,
-    <a href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS" target="_blank">open DepEd Tayo page</a>.
-  </div>
-</div>
-</aside>
+          <div class="fbFallback">
+            If it doesn’t load,
+            <a href="https://www.facebook.com/DepedTayoGenFlavianoYengkoSHS" target="_blank" rel="noopener">open DepEd Tayo page</a>.
+          </div>
+        </div>
+      </aside>
 
     </div>
   </div>
 
+  <!-- Facebook SDK -->
   <script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0"></script>
 
-<script src="js/news.js"></script>
-<script type="module" src="js/dashboard.js"></script>
-
+  <!-- IMPORTANT: remove news.js if you use the news code inside dashboard.js -->
+  <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>
