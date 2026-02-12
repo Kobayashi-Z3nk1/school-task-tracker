@@ -329,43 +329,47 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 /* =========================
-   8) NEWS SIDEBAR TABS (SYNC LEFT + RIGHT)
-   Requires:
-   LEFT:  fb-page1, fb-page2, fb-page3
-   RIGHT: fbR-page1, fbR-page2, fbR-page3
+   8) NEWS SIDEBAR TABS (FB) - FIXED (LEFT + RIGHT)
    ========================= */
-function setNews(pageKey) {
-  // Buttons (left + right)
-  document.querySelectorAll(".news-left .newsTab").forEach(b => {
-    b.classList.toggle("active", b.dataset.page === pageKey);
+
+// helper: show one page inside a specific sidebar only
+function setNewsPage(sidebarEl, page) {
+  if (!sidebarEl) return;
+
+  // buttons only inside this sidebar
+  sidebarEl.querySelectorAll(".newsTab").forEach(b => {
+    b.classList.toggle("active", b.dataset.page === page);
   });
-  document.querySelectorAll(".news-right .newsTab").forEach(b => {
-    b.classList.toggle("active", b.dataset.page === pageKey);
+
+  // fb panels only inside this sidebar
+  sidebarEl.querySelectorAll(".fbWrap").forEach(w => {
+    w.classList.toggle("active", w.dataset.page === page);
   });
 
-  // Panels (left)
-  document.querySelectorAll(".news-left .fbWrap").forEach(w => w.classList.remove("active"));
-  const leftPanel = document.getElementById(`fb-${pageKey}`);
-  if (leftPanel) leftPanel.classList.add("active");
-
-  // Panels (right)
-  document.querySelectorAll(".news-right .fbWrap").forEach(w => w.classList.remove("active"));
-  const rightPanel = document.getElementById(`fbR-${pageKey}`);
-  if (rightPanel) rightPanel.classList.add("active");
-
-  // Re-render FB plugin after switching
-  if (window.FB && window.FB.XFBML) {
-    window.FB.XFBML.parse(document.querySelector(".news-left"));
-    window.FB.XFBML.parse(document.querySelector(".news-right"));
+  // re-render FB widgets inside this sidebar only
+  if (window.FB && FB.XFBML) {
+    FB.XFBML.parse(sidebarEl);
   }
 }
 
-// Click on any newsTab (either column)
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".newsTab");
-  if (!btn) return;
-  setNews(btn.dataset.page);
-});
+// initialize BOTH sidebars
+function initNewsSidebar(sidebarSelector) {
+  const sidebarEl = document.querySelector(sidebarSelector);
+  if (!sidebarEl) return;
 
-// Default: STEM
-setNews("page1");
+  const firstBtn = sidebarEl.querySelector(".newsTab.active") || sidebarEl.querySelector(".newsTab");
+  const defaultPage = firstBtn?.dataset.page || "page1";
+
+  // ensure something is visible on load
+  setNewsPage(sidebarEl, defaultPage);
+
+  sidebarEl.querySelectorAll(".newsTab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setNewsPage(sidebarEl, btn.dataset.page);
+    });
+  });
+}
+
+// LEFT + RIGHT (this keeps them independent)
+initNewsSidebar(".news-left");
+initNewsSidebar(".news-right");
